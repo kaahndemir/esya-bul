@@ -1,0 +1,198 @@
+[
+  {
+    "id": "TASK_FRIDGE_FREE",
+    "type": "CATEGORY_SCAN",
+    "category": "FRIDGE",
+    "strategy": "FREE",
+    "url": "https://www.letgo.com/arama?query_text=buzdolab%C4%B1&isSearchCall=true&city_id=4000040&price=[0-5]"
+  },
+  {
+    "id": "TASK_FRIDGE_SYMBOLIC",
+    "type": "CATEGORY_SCAN",
+    "category": "FRIDGE",
+    "strategy": "SYMBOLIC",
+    "url": "https://www.letgo.com/arama?query_text=buzdolab%C4%B1&isSearchCall=true&city_id=4000040&price=[6-100]"
+  },
+  {
+    "id": "TASK_FRIDGE_CHEAP",
+    "type": "CATEGORY_SCAN",
+    "category": "FRIDGE",
+    "strategy": "CHEAP",
+    "url": "https://www.letgo.com/arama?query_text=buzdolab%C4%B1&isSearchCall=true&city_id=4000040&price=[101-300]"
+  },
+  {
+    "id": "TASK_WASHER_FREE",
+    "type": "CATEGORY_SCAN",
+    "category": "WASHER",
+    "strategy": "FREE",
+    "url": "https://www.letgo.com/arama?query_text=%C3%A7ama%C5%9F%C4%B1r%20makinesi&isSearchCall=true&city_id=4000040&price=[0-5]"
+  },
+  {
+    "id": "TASK_WASHER_SYMBOLIC",
+    "type": "CATEGORY_SCAN",
+    "category": "WASHER",
+    "strategy": "SYMBOLIC",
+    "url": "https://www.letgo.com/arama?query_text=%C3%A7ama%C5%9F%C4%B1r%20makinesi&isSearchCall=true&city_id=4000040&price=[6-100]"
+  },
+  {
+    "id": "TASK_WASHER_CHEAP",
+    "type": "CATEGORY_SCAN",
+    "category": "WASHER",
+    "strategy": "CHEAP",
+    "url": "https://www.letgo.com/arama?query_text=%C3%A7ama%C5%9F%C4%B1r%20makinesi&isSearchCall=true&city_id=4000040&price=[101-300]"
+  },
+  {
+    "id": "TASK_BED_FREE",
+    "type": "CATEGORY_SCAN",
+    "category": "BED",
+    "strategy": "FREE",
+    "url": "https://www.letgo.com/arama?query_text=yatak%20baza&isSearchCall=true&city_id=4000040&price=[0-5]"
+  },
+  {
+    "id": "TASK_BED_SYMBOLIC",
+    "type": "CATEGORY_SCAN",
+    "category": "BED",
+    "strategy": "SYMBOLIC",
+    "url": "https://www.letgo.com/arama?query_text=yatak%20baza&isSearchCall=true&city_id=4000040&price=[6-100]"
+  },
+  {
+    "id": "TASK_BED_CHEAP",
+    "type": "CATEGORY_SCAN",
+    "category": "BED",
+    "strategy": "CHEAP",
+    "url": "https://www.letgo.com/arama?query_text=yatak%20baza&isSearchCall=true&city_id=4000040&price=[101-300]"
+  },
+  {
+    "id": "TASK_SOFA_FREE",
+    "type": "CATEGORY_SCAN",
+    "category": "SOFA",
+    "strategy": "FREE",
+    "url": "https://www.letgo.com/arama?query_text=koltuk%20kanepe&isSearchCall=true&city_id=4000040&price=[0-5]"
+  },
+  {
+    "id": "TASK_SOFA_SYMBOLIC",
+    "type": "CATEGORY_SCAN",
+    "category": "SOFA",
+    "strategy": "SYMBOLIC",
+    "url": "https://www.letgo.com/arama?query_text=koltuk%20kanepe&isSearchCall=true&city_id=4000040&price=[6-100]"
+  },
+  {
+    "id": "TASK_SOFA_CHEAP",
+    "type": "CATEGORY_SCAN",
+    "category": "SOFA",
+    "strategy": "CHEAP",
+    "url": "https://www.letgo.com/arama?query_text=koltuk%20kanepe&isSearchCall=true&city_id=4000040&price=[101-300]"
+  },
+  {
+    "id": "TASK_TABLE_FREE",
+    "type": "CATEGORY_SCAN",
+    "category": "TABLE",
+    "strategy": "FREE",
+    "url": "https://www.letgo.com/arama?query_text=masa%20sandalye&isSearchCall=true&city_id=4000040&price=[0-5]"
+  },
+  {
+    "id": "TASK_TABLE_SYMBOLIC",
+    "type": "CATEGORY_SCAN",
+    "category": "TABLE",
+    "strategy": "SYMBOLIC",
+    "url": "https://www.letgo.com/arama?query_text=masa%20sandalye&isSearchCall=true&city_id=4000040&price=[6-100]"
+  },
+  {
+    "id": "TASK_TABLE_CHEAP",
+    "type": "CATEGORY_SCAN",
+    "category": "TABLE",
+    "strategy": "CHEAP",
+    "url": "https://www.letgo.com/arama?query_text=masa%20sandalye&isSearchCall=true&city_id=4000040&price=[101-300]"
+  },
+  {
+    "id": "TASK_RUGS_FREE",
+    "type": "CATEGORY_SCAN",
+    "category": "RUGS",
+    "strategy": "FREE",
+    "url": "https://www.letgo.com/arama?query_text=hal%C4%B1%20kilim&isSearchCall=true&city_id=4000040&price=[0-5]"
+  },
+  {
+    "id": "TASK_RUGS_SYMBOLIC",
+    "type": "CATEGORY_SCAN",
+    "category": "RUGS",
+    "strategy": "SYMBOLIC",
+    "url": "https://www.letgo.com/arama?query_text=hal%C4%B1%20kilim&isSearchCall=true&city_id=4000040&price=[6-100]"
+  },
+  {
+    "id": "TASK_RUGS_CHEAP",
+    "type": "CATEGORY_SCAN",
+    "category": "RUGS",
+    "strategy": "CHEAP",
+    "url": "https://www.letgo.com/arama?query_text=hal%C4%B1%20kilim&isSearchCall=true&city_id=4000040&price=[101-300]"
+  },
+  {
+    "id": "TASK_WARDROBE_FREE",
+    "type": "CATEGORY_SCAN",
+    "category": "WARDROBE",
+    "strategy": "FREE",
+    "url": "https://www.letgo.com/arama?query_text=dolap%20gard%C4%B1rop&isSearchCall=true&city_id=4000040&price=[0-5]"
+  },
+  {
+    "id": "TASK_WARDROBE_SYMBOLIC",
+    "type": "CATEGORY_SCAN",
+    "category": "WARDROBE",
+    "strategy": "SYMBOLIC",
+    "url": "https://www.letgo.com/arama?query_text=dolap%20gard%C4%B1rop&isSearchCall=true&city_id=4000040&price=[6-100]"
+  },
+  {
+    "id": "TASK_WARDROBE_CHEAP",
+    "type": "CATEGORY_SCAN",
+    "category": "WARDROBE",
+    "strategy": "CHEAP",
+    "url": "https://www.letgo.com/arama?query_text=dolap%20gard%C4%B1rop&isSearchCall=true&city_id=4000040&price=[101-300]"
+  },
+  {
+    "id": "TASK_OPPORTUNITY_TAŞINIYORUM",
+    "type": "OPPORTUNITY_SCAN",
+    "category": "SCAVENGER",
+    "strategy": "KEYWORD",
+    "url": "https://www.letgo.com/arama?query_text=ta%C5%9F%C4%B1n%C4%B1yorum&isSearchCall=true&city_id=4000040&price=[0-500]"
+  },
+  {
+    "id": "TASK_OPPORTUNITY_ACIL_SATILIK",
+    "type": "OPPORTUNITY_SCAN",
+    "category": "SCAVENGER",
+    "strategy": "KEYWORD",
+    "url": "https://www.letgo.com/arama?query_text=acil%20sat%C4%B1l%C4%B1k&isSearchCall=true&city_id=4000040&price=[0-500]"
+  },
+  {
+    "id": "TASK_OPPORTUNITY_ÖĞRENCIYE",
+    "type": "OPPORTUNITY_SCAN",
+    "category": "SCAVENGER",
+    "strategy": "KEYWORD",
+    "url": "https://www.letgo.com/arama?query_text=%C3%B6%C4%9Frenciye&isSearchCall=true&city_id=4000040&price=[0-500]"
+  },
+  {
+    "id": "TASK_OPPORTUNITY_BEDAVA",
+    "type": "OPPORTUNITY_SCAN",
+    "category": "SCAVENGER",
+    "strategy": "KEYWORD",
+    "url": "https://www.letgo.com/arama?query_text=bedava&isSearchCall=true&city_id=4000040&price=[0-500]"
+  },
+  {
+    "id": "TASK_OPPORTUNITY_ÜCRETSIZ",
+    "type": "OPPORTUNITY_SCAN",
+    "category": "SCAVENGER",
+    "strategy": "KEYWORD",
+    "url": "https://www.letgo.com/arama?query_text=%C3%BCcretsiz&isSearchCall=true&city_id=4000040&price=[0-500]"
+  },
+  {
+    "id": "TASK_OPPORTUNITY_DEPO_BOŞALTIYORUM",
+    "type": "OPPORTUNITY_SCAN",
+    "category": "SCAVENGER",
+    "strategy": "KEYWORD",
+    "url": "https://www.letgo.com/arama?query_text=depo%20bo%C5%9Falt%C4%B1yorum&isSearchCall=true&city_id=4000040&price=[0-500]"
+  },
+  {
+    "id": "TASK_OPPORTUNITY_FAZLALIK",
+    "type": "OPPORTUNITY_SCAN",
+    "category": "SCAVENGER",
+    "strategy": "KEYWORD",
+    "url": "https://www.letgo.com/arama?query_text=fazlal%C4%B1k&isSearchCall=true&city_id=4000040&price=[0-500]"
+  }
+]

@@ -1,0 +1,32 @@
+# General
+.DS_Store
+docs/
+node_modules
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Scraper Data (Exclude raw heavy data)
+scraper/data/raw_*.json
+scraper/data/harvest_*.json
+scraper/data/enriched_*.json
+scraper/data/*.png
+
+# Keep final outputs for reference (optional)
+!scraper/data/verified_broad_data.json
+!scraper/data/audited_broad_data.json
+!scraper/data/tasks_queue.json
+
+# Web Dashboard (Next.js)
+web-dashboard/.next/
+web-dashboard/out/
+web-dashboard/build
+web-dashboard/npm-debug.log*
+web-dashboard/yarn-debug.log*
+web-dashboard/yarn-error.log*
+web-dashboard/.pnpm-debug.log*
+
+# Vercel
+.vercel
