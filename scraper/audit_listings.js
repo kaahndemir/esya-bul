@@ -5,6 +5,14 @@ const INPUT_FILE = path.join(__dirname, 'data', 'enriched_broad_data.json');
 const OUTPUT_FILE = path.join(__dirname, 'data', 'audited_data.json');
 
 // --- AUDIT LOGIC ---
+function turkishToLower(str) {
+	if (!str) return '';
+	return str
+		.replace(/İ/g, 'i')
+		.replace(/I/g, 'ı')
+		.toLowerCase();
+}
+
 const RED_FLAGS = [
 	'fiyat temsili', 'temsili fiyat', 'temsilidir',
 	'fiyat bilgisi için', 'fiyat için', 'iletişime geçin',
@@ -15,7 +23,19 @@ const RED_FLAGS = [
 	'bin tl', '000 tl', 'tl dir', 'tl\'dir', 'lira',
 	'ücretsiz kargo', 'ücretsiz teslimat', 'bedava kargo', 'bedava teslimat',
 	'imalat', 'toptan', 'kredi kartı', 'kredi karti', 'taksit',
-	'bursa', 'ankara', 'izmir', 'adrese teslim', 'türkiye geneli', 'turkiye geneli', 'tüm illere'
+	'bursa', 'ankara', 'izmir', 'adrese teslim', 'türkiye geneli', 'turkiye geneli', 'tüm illere',
+	
+	// Mama Sandalyesi (Baby High Chairs)
+	'mama sandalye', 'mama sandaliyesi', 'bebek sandalye', 'bebek koltuğu', 'bebek koltugu',
+	// Spare parts & accessories
+	'sandalye kılıfı', 'sandalye minderi', 'sandalye ayağı', 'sandalye kolu', 'sandalye kolları',
+	'masa örtüsü', 'masa kılıfı', 'koruma kılıfı',
+	// Commercial Shipping & Setup terms
+	'ücretsiz sevkiyat', 'ücretsiz nakliye', 'ücretsiz kurulum', 'bedava sevkiyat', 'bedava nakliye', 'bedava kurulum',
+	'kapıda ödeme', 'nakliye montaj', 'nakliye bizden', 'kurulum bizden',
+	// Customization terms (manufacturers)
+	'renk seçeneği', 'renk seçenekleri', 'renk değişir', 'renk seçeneğ', 'kumaş seçeneği', 'kumaş seçenekleri',
+	'sıfır ürün'
 ];
 
 const PLACEHOLDER_PATTERNS = [
@@ -39,9 +59,9 @@ function isPlaceholder(desc) {
 }
 
 function checkRedFlags(item) {
-	const desc = (item.description || '').toLowerCase();
-	const title = (item.title || '').toLowerCase();
-	const location = (item.location || '').toLowerCase();
+	const desc = turkishToLower(item.description);
+	const title = turkishToLower(item.title);
+	const location = turkishToLower(item.location);
 
 	// 1. Temsili fiyat, dış şehir ve yasaklı kelime kontrolü
 	for (const flag of RED_FLAGS) {
