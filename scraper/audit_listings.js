@@ -39,7 +39,10 @@ const RED_FLAGS = [
 	'kapıda ödeme', 'nakliye montaj', 'nakliye bizden', 'kurulum bizden', 'teslimat bizden', 'teslim kurulum',
 	// Customization terms (manufacturers)
 	'renk seçeneği', 'renk seçenekleri', 'renk değişir', 'renk seçeneğ', 'kumaş seçeneği', 'kumaş seçenekleri',
-	'sıfır ürün', 'garantili', 'yıl garanti'
+	'sıfır ürün', 'garantili', 'yıl garanti', 'renk secene',
+	
+	// Store names & retail hubs
+	'tozanli', 'alibeykoy', 'modoko', 'masko', 'magaza', 'sube'
 ];
 
 const NORMALIZED_RED_FLAGS = RED_FLAGS.map(flag => turkishNormalize(flag));
