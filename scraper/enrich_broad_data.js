@@ -6,7 +6,7 @@ const path = require('path');
 // CONFIG
 const INPUT_FILE = path.join(__dirname, 'data', 'verified_broad_data.json');
 const OUTPUT_FILE = path.join(__dirname, 'data', 'enriched_broad_data.json');
-const CONCURRENCY = 6; // Increased for speed since we have many items
+const CONCURRENCY = 20; // Increased for speed since we have many items
 const SAVE_INTERVAL = 10;
 
 // Random user agents to rotate

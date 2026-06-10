@@ -24,8 +24,8 @@ const TASKS = [
 const path = require('path');
 
 // AYARLAR
-const MAX_CLICKS_PER_CATEGORY = 10;
-const HEADLESS_MODE = false;
+const MAX_CLICKS_PER_CATEGORY = 5;
+const HEADLESS_MODE = true;
 const OUTPUT_FILE = path.join(__dirname, 'data', 'raw_broad_scrape.json');
 
 const sleep = (ms) => new Promise(r => setTimeout(r, ms));

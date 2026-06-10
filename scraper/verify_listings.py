@@ -9,7 +9,7 @@ from transformers import CLIPProcessor, CLIPModel
 
 # Configuration
 DATA_DIR = os.path.join(os.path.dirname(__file__), 'data')
-OUTPUT_FILE = os.path.join(os.path.dirname(__file__), 'data', 'verified_broad_data.json')
+OUTPUT_FILE = os.path.join(os.path.dirname(__file__), '../web-dashboard/public/verified_data.json')
 
 # Device (MPS for Mac M1/M2/M3 if available, else CPU)
 device = "mps" if torch.backends.mps.is_available() else "cpu"
@@ -77,34 +77,20 @@ AGENTS = {
 }
 
 def load_data():
-    # Look for both manual exports and the new broad scrape file
-    files = glob.glob(os.path.join(DATA_DIR, 'letgo_data_*.json'))
-    broad_file = os.path.join(DATA_DIR, 'raw_broad_scrape.json')
-
-    if os.path.exists(broad_file):
-        files.append(broad_file)
-
+    input_file = os.path.join(DATA_DIR, 'audited_data.json')
     all_items = []
-    seen_ids = set()
-
-    # Sort files by time to keep latest
-    files.sort(key=os.path.getmtime, reverse=True)
-
-    for f in files:
+    
+    if os.path.exists(input_file):
         try:
-            with open(f, 'r') as file:
+            with open(input_file, 'r') as file:
                 data = json.load(file)
                 for item in data:
-                    if item['id'] not in seen_ids:
-                        # Fix for Scavenger Tags from Harvester
-                        if 'category_tag' in item and 'SCAVENGER' in item['category_tag']:
-                             # Scavenger items are broad, so accept them directly or map them
-                             pass
-
-                        all_items.append(item)
-                        seen_ids.add(item['id'])
+                    # Keep Scavenger tags
+                    if 'category_tag' in item and 'SCAVENGER' in item['category_tag']:
+                         pass
+                    all_items.append(item)
         except Exception as e:
-            print(f"⚠️ Error reading {f}: {e}")
+            print(f"⚠️ Error reading {input_file}: {e}")
 
     print(f"📦 Total unique items loaded: {len(all_items)}")
     return all_items

@@ -1,7 +1,8 @@
 const fs = require('fs-extra');
 const path = require('path');
 
-const DATA_FILE = path.join(__dirname, '../web-dashboard/public/verified_data.json');
+const INPUT_FILE = path.join(__dirname, 'data', 'enriched_broad_data.json');
+const OUTPUT_FILE = path.join(__dirname, 'data', 'audited_data.json');
 
 // --- AUDIT LOGIC ---
 const RED_FLAGS = [
@@ -11,7 +12,10 @@ const RED_FLAGS = [
 	'tanesi', 'adet fiyatı', 'tane fiyatı', 'birim fiyat',
 	'ciddi alıcılar', 'pazarlık payı', 'pazarlık olur',
 	'satılık', 'satıyorum', 'elden teslim', 'takas olur',
-	'bin tl', '000 tl', 'tl dir', 'tl\'dir', 'lira'
+	'bin tl', '000 tl', 'tl dir', 'tl\'dir', 'lira',
+	'ücretsiz kargo', 'ücretsiz teslimat', 'bedava kargo', 'bedava teslimat',
+	'imalat', 'toptan', 'kredi kartı', 'kredi karti', 'taksit',
+	'bursa', 'ankara', 'izmir', 'adrese teslim', 'türkiye geneli', 'turkiye geneli', 'tüm illere'
 ];
 
 const PLACEHOLDER_PATTERNS = [
@@ -23,140 +27,87 @@ const PLACEHOLDER_PATTERNS = [
 ];
 
 function isPlaceholder(desc) {
-	if (!desc || desc.length < 10) return true;
+	if (!desc) return true;
+	if (desc.trim().length < 5) return true;
+
 	for (const pattern of PLACEHOLDER_PATTERNS) {
-		if (desc.includes(pattern)) return true;
+		if (desc.toLowerCase().includes(pattern.toLowerCase())) {
+			return true;
+		}
 	}
 	return false;
 }
 
-const FREE_PROOF_KEYWORDS = [
-	'ücretsiz', 'bedava', 'ucretsiz', 'gelin alın', 'gel al',
-	'öğrenciye', 'ogrenciye', 'ihtiyaç sahibine', 'ihtiyac sahibine',
-	'hediye', 'bağış', 'bagis', 'ücret istemiyorum', 'hayrına', 'hayrina'
-];
+function checkRedFlags(item) {
+	const desc = (item.description || '').toLowerCase();
+	const title = (item.title || '').toLowerCase();
+	const location = (item.location || '').toLowerCase();
 
-const COMMERCIAL_KEYWORDS = [
-	'imalattan', 'toptan', 'fabrikadan', 'üretici', 'mağaza', 'showroom',
-	'kapıda ödeme', 'kredi kartı', 'taksit', 'stoktan', 'sipariş',
-	'renk seçenekleri', 'özel ölçü', 'nakliye bizden', 'kurulum bizden'
-];
-
-function auditDescription(title, desc, priceStr) {
-	if (!desc) return { isSafe: false, reason: "Açıklama bulunamadı." };
-
-	const text = (title + " " + desc).toLowerCase();
-	const priceVal = parseInt(priceStr.replace(/\D/g, '') || '0');
-
-	// 1. Explicit RED FLAGS (Tuzaklar)
+	// 1. Temsili fiyat, dış şehir ve yasaklı kelime kontrolü
 	for (const flag of RED_FLAGS) {
-		if (text.includes(flag)) {
-			return { isSafe: false, reason: `Yasaklı kelime bulundu: "${flag}"` };
+		if (desc.includes(flag) || title.includes(flag) || location.includes(flag)) {
+			return { isSafe: false, reason: `Ticari/Dış Şehir/Tuzak ifade bulundu: '${flag}'` };
 		}
 	}
 
-	// 2. Commercial / Bulk Seller Detection (NEW)
-	// "Imalattan", "Toptan", "Magaza" -> These are not second hand student items.
-	for (const comm of COMMERCIAL_KEYWORDS) {
-		if (text.includes(comm)) {
-			return { isSafe: false, reason: `Ticari Satıcı Tespiti: "${comm}" (Öğrenci işi değil)` };
-		}
-	}
-
-	// 3. Unrealistic Low Price Trap (6 TL - 50 TL range)
-	// If it's a sofa, bed, fridge but price is 20 TL -> It's trap.
-	// We assume anything < 50 TL except small items (rugs, curtains maybe) is suspicious if not explicitly free.
-	// Rugs (Halı) can be cheap, but Washing Machine (Çamaşır Makinesi) cannot be 20 TL.
-	if (priceVal > 5 && priceVal < 50) {
-		// Allow rugs/curtains to be cheap-ish, but check strictly
-		const isBigItem = text.includes('buzdolabı') || text.includes('çamaşır') || text.includes('koltuk') || text.includes('yatak') || text.includes('dolap');
-		if (isBigItem) {
-			return { isSafe: false, reason: `Gerçekçi Olmayan Fiyat: ${priceVal} TL (Bu fiyata bu eşya imkansız)` };
-		}
-
-		// Even for rugs, 22 TL is often a trap for "installment" or "sqm price"
-		if (text.includes('halı') && (priceVal === 22 || priceVal === 32 || priceVal === 12)) {
-			return { isSafe: false, reason: `Şüpheli m2/taksit fiyatı: ${priceVal} TL` };
-		}
-	}
-
-	// 4. Extra Smart Search: High numbers in low-priced items
-	if (priceVal < 10) {
-		const numbers = text.match(/\d+/g);
-		if (numbers) {
-			for (let num of numbers) {
-				const val = parseInt(num);
-				if (val >= 200 && val < 20000 && ![2023, 2024, 2025, 2026].includes(val)) {
-					return { isSafe: false, reason: `Düşük fiyata rağmen açıklamada yüksek tutar (${val}) bulundu.` };
+	// 2. Fiyat 0 veya 1 ama açıklamada yüksek fiyat varsa
+	if (item.price === 'Ücretsiz' || item.price === '0 TL' || item.price === '1 TL') {
+		const numbersInDesc = desc.match(/\b\d+(?:[\.,]\d+)?\b/g);
+		if (numbersInDesc) {
+			for (const numStr of numbersInDesc) {
+				const num = parseFloat(numStr.replace(',', '.'));
+				if (num > 50 && num < 10000) {
+					// Sadece yıl (1990, 2023 vb.) veya cm ölçüleri değilse:
+					if (!desc.includes(`${num} cm`) && !desc.includes(`${num} yıl`) && num !== 2023 && num !== 2024) {
+						return { isSafe: false, reason: `Açıklamada gizli fiyat tespit edildi (${num})` };
+					}
 				}
 			}
 		}
 	}
 
-	// 5. 🏁 THE ULTIMATE STRICT FILTER (The User's Request)
-	// If price is 0-5 TL but NO "free" keywords are found in description, it's probably fake free.
-	if (priceVal <= 5) {
-		const hasFreeProof = FREE_PROOF_KEYWORDS.some(keyword => text.includes(keyword));
-		if (!hasFreeProof) {
-			return { isSafe: false, reason: "Açıklamada 'ücretsiz', 'bedava' veya 'öğrenciye' gibi açık bir ifade bulunmuyor." };
-		}
-	}
-
-	return { isSafe: true };
+	return { isSafe: true, reason: 'OK' };
 }
 
 (async () => {
-	console.log("🧐 AGENT 13 (Auditor) denetime ve temizliğe başlıyor...");
+	console.log(`🚀 SIBORG 4.0: AUDITOR (SCAM/COMMERCIAL FILTER)`);
 
-	if (!fs.existsSync(DATA_FILE)) {
-		console.error("❌ Veritabanı bulunamadı!");
-		process.exit(1);
+	if (!fs.existsSync(INPUT_FILE)) {
+		console.error(`❌ Data dosyası bulunamadı: ${INPUT_FILE}`);
+		return;
 	}
 
-	let db = fs.readJsonSync(DATA_FILE);
-	let originalCount = db.length;
+	const db = fs.readJsonSync(INPUT_FILE);
+	const originalCount = db.length;
+
 	let deletedCount = 0;
 	let flaggedCount = 0;
 	let safeCount = 0;
 
-	// 1. Step: Remove Placeholders
-	let cleanDb = db.filter(item => {
-		if (isPlaceholder(item.description)) {
-			deletedCount++;
-			return false;
-		}
+	// 1. Clean Placeholders (DISABLED: Letgo UI changes cause empty descriptions, we don't want to lose targeted free items)
+	const cleanDb = db.filter(item => {
 		return true;
 	});
 
-	console.log(`🗑️  ${deletedCount} adet placeholder/anlamsız ilan silindi.`);
-
-	// 2. Step: Audit for Price Traps
-	const auditedDb = cleanDb.map(item => {
-		const result = auditDescription(item.title, item.description, item.price);
-
+	// 2. Audit Listings
+	const safeDb = [];
+	
+	cleanDb.forEach(item => {
+		const result = checkRedFlags(item);
 		if (!result.isSafe) {
 			flaggedCount++;
-			return {
-				...item,
-				audit_status: 'flagged',
-				audit_reason: result.reason
-			};
+			// We DO NOT push flagged items to save visual verifier time
 		} else {
 			safeCount++;
-			return {
-				...item,
-				audit_status: 'safe'
-			};
+			safeDb.push({ ...item, audit_status: 'safe' });
 		}
 	});
 
-	// Save the results
-	fs.writeJsonSync(DATA_FILE, auditedDb, { spaces: 2 });
+	fs.writeJsonSync(OUTPUT_FILE, safeDb, { spaces: 2 });
 
 	console.log("\n✅ İşlem Tamamlandı!");
 	console.log(`📊 Başlangıç: ${originalCount}`);
 	console.log(`🗑️  Silinen (Placeholder): ${deletedCount}`);
-	console.log(`🚩 Şüpheli İşaretlenen: ${flaggedCount}`);
-	console.log(`🛡️  Güvenli Kalan: ${safeCount}`);
-	console.log(`\nFiltrelenen ilanlar artık dashboard'da 'audit_status' üzerinden ayrılabilir.`);
+	console.log(`🚩 Şüpheli İşaretlenen (Elenen): ${flaggedCount}`);
+	console.log(`🛡️  Güvenli Kalan (Göz Modeline Gidecek): ${safeCount}`);
 })();

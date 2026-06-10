@@ -34,7 +34,7 @@ const sleep = (ms) => new Promise(r => setTimeout(r, ms));
 		concurrency: Cluster.CONCURRENCY_CONTEXT,
 		maxConcurrency: MAX_CONCURRENCY,
 		puppeteerOptions: {
-			headless: false, // Debug modunda açık
+			headless: true, // Debug modunda açık
 			args: ['--no-sandbox', '--disable-setuid-sandbox', '--start-maximized'],
 			defaultViewport: null
 		},
