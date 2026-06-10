@@ -5,11 +5,15 @@ const INPUT_FILE = path.join(__dirname, 'data', 'enriched_broad_data.json');
 const OUTPUT_FILE = path.join(__dirname, 'data', 'audited_data.json');
 
 // --- AUDIT LOGIC ---
-function turkishToLower(str) {
+function turkishNormalize(str) {
 	if (!str) return '';
 	return str
-		.replace(/İ/g, 'i')
-		.replace(/I/g, 'ı')
+		.replace(/[İıI]/g, 'i')
+		.replace(/[Şş]/g, 's')
+		.replace(/[Ğğ]/g, 'g')
+		.replace(/[Üü]/g, 'u')
+		.replace(/[Öö]/g, 'o')
+		.replace(/[Çç]/g, 'c')
 		.toLowerCase();
 }
 
@@ -32,11 +36,13 @@ const RED_FLAGS = [
 	'masa örtüsü', 'masa kılıfı', 'koruma kılıfı',
 	// Commercial Shipping & Setup terms
 	'ücretsiz sevkiyat', 'ücretsiz nakliye', 'ücretsiz kurulum', 'bedava sevkiyat', 'bedava nakliye', 'bedava kurulum',
-	'kapıda ödeme', 'nakliye montaj', 'nakliye bizden', 'kurulum bizden',
+	'kapıda ödeme', 'nakliye montaj', 'nakliye bizden', 'kurulum bizden', 'teslimat bizden', 'teslim kurulum',
 	// Customization terms (manufacturers)
 	'renk seçeneği', 'renk seçenekleri', 'renk değişir', 'renk seçeneğ', 'kumaş seçeneği', 'kumaş seçenekleri',
-	'sıfır ürün'
+	'sıfır ürün', 'garantili', 'yıl garanti'
 ];
+
+const NORMALIZED_RED_FLAGS = RED_FLAGS.map(flag => turkishNormalize(flag));
 
 const PLACEHOLDER_PATTERNS = [
 	"letgo'da seni bekliyor",
@@ -59,12 +65,12 @@ function isPlaceholder(desc) {
 }
 
 function checkRedFlags(item) {
-	const desc = turkishToLower(item.description);
-	const title = turkishToLower(item.title);
-	const location = turkishToLower(item.location);
+	const desc = turkishNormalize(item.description);
+	const title = turkishNormalize(item.title);
+	const location = turkishNormalize(item.location);
 
 	// 1. Temsili fiyat, dış şehir ve yasaklı kelime kontrolü
-	for (const flag of RED_FLAGS) {
+	for (const flag of NORMALIZED_RED_FLAGS) {
 		if (desc.includes(flag) || title.includes(flag) || location.includes(flag)) {
 			return { isSafe: false, reason: `Ticari/Dış Şehir/Tuzak ifade bulundu: '${flag}'` };
 		}
