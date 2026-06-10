@@ -42,7 +42,10 @@ const RED_FLAGS = [
 	'sıfır ürün', 'garantili', 'yıl garanti', 'renk secene',
 	
 	// Store names & retail hubs
-	'tozanli', 'alibeykoy', 'modoko', 'masko', 'magaza', 'sube'
+	'tozanli', 'alibeykoy', 'modoko', 'masko', 'magaza', 'sube',
+	
+	// Individual sale terms (commercial stock)
+	'tek olarak da satil', 'tekli satil', 'tek tek satil', 'tek satilmaktadir', 'tekli satilmaktadir', 'tek olarak satil', 'adetli satil'
 ];
 
 const NORMALIZED_RED_FLAGS = RED_FLAGS.map(flag => turkishNormalize(flag));
